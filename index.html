@@ -3,20 +3,88 @@
 <head>
 <meta charset="utf-8">
 <title>Slide Maker</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+  <!-- Reference the theme's stylesheet on the Google CDN -->
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/start/jquery-ui.css" type="text/css" rel="Stylesheet" />
+ 
+  <!-- Reference jQuery and jQuery UI from the CDN. Remember
+       that the order of these two elements is important -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
+  <style>
+  	.ui-draggable {
+  		border: 2px solid #DDD;
+  	}
+  </style>
 </head>
 <body>
 
 <section aria-selected>
-	<h1 contenteditable>This is a test!</h1>
+	<h1 class="dragresize" contenteditable>This is a test!</h1>
+	<img class="dragresize" src="http://placekitten.com/g/800/600">
 </section>
 <input type='button' value='Insert Text' id='insertText'/>
+<input type='button' value='Drag' id='drag'/>
+<input type='button' value='Edit' id='edit'/>
 
 <script>
 $('#insertText').click(function(){
-	$('section[aria-selected]').append('<h1 contenteditable>Text</h1>');
+	$('section[aria-selected]').append('<h1 class="dragresize" style="width:200px;height:200px;" contenteditable>Text</h1>');
+});
+
+$('#drag').click(function(){
+	$(".dragresize").resizable();
+	$(".dragresize").draggable({ delay: 1000 });
+});
+
+$('#edit').click(function(){
+	$( ".dragresize" ).draggable("destroy");
+	$( ".dragresize" ).resizable("destroy");
 });
 </script>
 
+<script>
+// from a nice forumn user who answered his own question!
+function startdrag(t, e)
+{
+	if(e.preventDefault)
+		e.preventDefault(); //line for IE compatibility
+
+	e.cancelBubble = true;
+	window.document.onmousemoveOld = window.document.onmousemove;
+	window.document.onmouseupOld = window.document.onmouseup;
+	window.document.onmousemove = dodrag;
+	window.document.onmouseup = stopdrag;
+	window.document.draged = t;
+	t.dragX = e.clientX;
+	t.dragY = e.clientY;
+
+	return false;
+}
+
+//move the DIV
+
+function dodrag(e)
+{
+	if(!e)
+		e = event; //line for IE compatibility
+    	
+	t = window.document.draged;
+	t.style.left = (t.offsetLeft + e.clientX - t.dragX) + "px";
+	t.style.top = (t.offsetTop + e.clientY - t.dragY) + "px";
+	t.dragX = e.clientX;
+	t.dragY = e.clientY;
+    
+	return false;
+}
+
+//restore event-handlers
+
+function stopdrag()
+{
+	window.document.onmousemove = window.document.onmousemoveOld;
+	window.document.onmouseup = window.document.onmouseupOld;
+}
+</script>
 </body>
 </html>
