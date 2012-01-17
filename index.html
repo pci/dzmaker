@@ -34,11 +34,11 @@ $('#insertText').click(function(){
 
 $('#drag').click(function(){
 	$(".dragresize").resizable();
-	$(".dragresize").draggable({ delay: 1000 });
+	//$(".dragresize").draggable({ delay: 1000 });
 });
 
 $('#edit').click(function(){
-	$( ".dragresize" ).draggable("destroy");
+	//$( ".dragresize" ).draggable("destroy");
 	$( ".dragresize" ).resizable("destroy");
 });
 </script>
@@ -47,8 +47,7 @@ $('#edit').click(function(){
 // from a nice forumn user who answered his own question!
 function startdrag(t, e)
 {
-	if(e.preventDefault)
-		e.preventDefault(); //line for IE compatibility
+	if(e.preventDefault) e.preventDefault(); //line for IE compatibility
 
 	e.cancelBubble = true;
 	window.document.onmousemoveOld = window.document.onmousemove;
