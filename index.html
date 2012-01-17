@@ -21,11 +21,11 @@
 
 <section aria-selected>
 	<h1 class="dragresize" contenteditable>This is a test!</h1>
-	<img class="dragresize" src="http://placekitten.com/g/800/600">
+	<div class="dragresize" id='img1' style="width:800px;height:600px;">
 </section>
 <input type='button' value='Insert Text' id='insertText'/>
 <input type='button' value='Drag' id='drag'/>
-<input type='button' value='Edit' id='edit'/>
+<input type='button' value='Undrag' id='undrag'/>
 
 <script>
 $('#insertText').click(function(){
@@ -34,56 +34,44 @@ $('#insertText').click(function(){
 
 $('#drag').click(function(){
 	$(".dragresize").resizable();
-	//$(".dragresize").draggable({ delay: 1000 });
+	$(".dragresize").dragit();
 });
 
-$('#edit').click(function(){
-	//$( ".dragresize" ).draggable("destroy");
+$('#undrag').click(function(){
 	$( ".dragresize" ).resizable("destroy");
 });
 </script>
 
 <script>
-// from a nice forumn user who answered his own question!
-function startdrag(t, e)
-{
-	if(e.preventDefault) e.preventDefault(); //line for IE compatibility
+(function( $ ) {
+  $.fn.dragit = function() {
+    // remember - no need for $(this)
+    var delay = 100,
+        timer,
+        dx, dy;
 
-	e.cancelBubble = true;
-	window.document.onmousemoveOld = window.document.onmousemove;
-	window.document.onmouseupOld = window.document.onmouseup;
-	window.document.onmousemove = dodrag;
-	window.document.onmouseup = stopdrag;
-	window.document.draged = t;
-	t.dragX = e.clientX;
-	t.dragY = e.clientY;
+    this.mousedown(function(e) {
+        // don't stop event prop (otherwise contenteditable stops working)
+        px = e.pageX - $(this).offset().left;
+        py = e.pageY - $(this).offset().top;
+        
+        $(this).on('mousemove',function(e){
+            $(this).offset({ top: e.pageY-py, left: e.pageX-px});
+        });
+    });
 
-	return false;
-}
+    this.mouseup(function() {
+        $(this).off('mousemove');
+    });
 
-//move the DIV
-
-function dodrag(e)
-{
-	if(!e)
-		e = event; //line for IE compatibility
-    	
-	t = window.document.draged;
-	t.style.left = (t.offsetLeft + e.clientX - t.dragX) + "px";
-	t.style.top = (t.offsetTop + e.clientY - t.dragY) + "px";
-	t.dragX = e.clientX;
-	t.dragY = e.clientY;
-    
-	return false;
-}
-
-//restore event-handlers
-
-function stopdrag()
-{
-	window.document.onmousemove = window.document.onmousemoveOld;
-	window.document.onmouseup = window.document.onmouseupOld;
-}
+  };
+})( jQuery );
 </script>
+
+<style id="editablestyle">
+#img1 {
+    background: url('http://placekitten.com/g/800/600');
+}
+</style>
 </body>
 </html>
